@@ -56,8 +56,8 @@ function purchaseItem() {
             console.log("Insufficient Quantity Order Will Not Be Processed");
           } else {
             newStockAmount = parseInt(currentStockQuantity - requestedPurchaseAmount);
-            console.log(itemChoice);
-            console.log(newStockAmount);
+            // console.log(itemChoice);
+            // console.log(newStockAmount);
             var query = connection.query("UPDATE products SET ? WHERE ?",
               [
                 {
@@ -69,10 +69,11 @@ function purchaseItem() {
               ],
               function(error) {
                 if (error) throw error;
-                printInventory();
+                // printInventory();
+                purchaseItem();
               }
             );
-            console.log(query.sql);
+            // console.log(query.sql);
           };
           // console.log(currentStockQuantity);
       });
