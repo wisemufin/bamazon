@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("Connected as id " + connection.threadID);
+  // console.log("Connected as id " + connection.threadID);
   //printInventory();
   purchaseItem();
 });
@@ -50,14 +50,29 @@ function purchaseItem() {
           var currentStockQuantity = response[itemChoice-1].stock_quantity;
           // Shows how much the user would like to purchase
           var requestedPurchaseAmount = answer.stock_quantity;
+          // Stores the price of the item that the user chooses
+          var itemPrice = response[itemChoice-1].price * requestedPurchaseAmount;
+          // Table ID's
+          var tableID = [];
 
           var newStockAmount = 0;
+
+          // COME BACK TO THIS FOR HELP!
+          // for (var i = 0; i < response.length; i++) {
+          //   tableID.push(response[i].item_id);
+          // };
+          //
+          // if (tableID.includes(itemChoice) !== true) {
+          //   console.log("That number does not exist!")
+          //   purchaseItem();
+          // };
+
+
           if(currentStockQuantity < requestedPurchaseAmount) {
             console.log("Insufficient Quantity Order Will Not Be Processed");
+            connection.end();
           } else {
             newStockAmount = parseInt(currentStockQuantity - requestedPurchaseAmount);
-            // console.log(itemChoice);
-            // console.log(newStockAmount);
             var query = connection.query("UPDATE products SET ? WHERE ?",
               [
                 {
@@ -71,11 +86,14 @@ function purchaseItem() {
                 if (error) throw error;
                 // printInventory();
                 purchaseItem();
+                console.log(
+                  `
+                  Your purchase costs $${itemPrice}
+                  `
+                );
               }
             );
-            // console.log(query.sql);
           };
-          // console.log(currentStockQuantity);
       });
   });
 }
