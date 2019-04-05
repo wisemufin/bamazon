@@ -46,54 +46,54 @@ function purchaseItem() {
 
           // itemChoice accesses the row in the database the user would like a product form
           var itemChoice = parseInt(answer.item_id);
-          // This stores the amount of the requested product currently in stock
-          var currentStockQuantity = response[itemChoice-1].stock_quantity;
           // Shows how much the user would like to purchase
           var requestedPurchaseAmount = answer.stock_quantity;
-          // Stores the price of the item that the user chooses
-          var itemPrice = response[itemChoice-1].price * requestedPurchaseAmount;
           // Table ID's
           var tableID = [];
-
+          // var itemPrice = response[itemChoice-1].price * answer.stock_quantity;
           var newStockAmount = 0;
 
           // COME BACK TO THIS FOR HELP!
-          // for (var i = 0; i < response.length; i++) {
-          //   tableID.push(response[i].item_id);
-          // };
-          //
-          // if (tableID.includes(itemChoice) !== true) {
-          //   console.log("That number does not exist!")
-          //   purchaseItem();
-          // };
-
-
-          if(currentStockQuantity < requestedPurchaseAmount) {
-            console.log("Insufficient Quantity Order Will Not Be Processed");
-            connection.end();
-          } else {
-            newStockAmount = parseInt(currentStockQuantity - requestedPurchaseAmount);
-            var query = connection.query("UPDATE products SET ? WHERE ?",
-              [
-                {
-                  stock_quantity: newStockAmount
-                },
-                {
-                  item_id: itemChoice
-                }
-              ],
-              function(error) {
-                if (error) throw error;
-                // printInventory();
-                purchaseItem();
-                console.log(
-                  `
-                  Your purchase costs $${itemPrice}
-                  `
-                );
-              }
-            );
+          for (var i = 0; i < response.length; i++) {
+            // tableID.push(response[i].item_id);
+            if (parseInt(response[i].item_id) === itemChoice){
+              return anotherFunction(response[i], answer);
+            }
           };
+
+          console.log("That number does not exist!")
+          purchaseItem();
+        });
       });
-  });
-}
+    }
+
+
+function anotherFunction(itemObj, answer)  {
+  var itemPrice = itemObj.price * answer.stock_quantity;
+
+  if(itemObj.stock_quantity < answer.stock_quantity) {
+    console.log("Insufficient Quantity Order Will Not Be Processed");
+    connection.end();
+  } else {
+    newStockAmount = parseInt(itemObj.stock_quantity - answer.stock_quantity);
+    var query = connection.query("UPDATE products SET ? WHERE ?",
+      [
+        {
+          stock_quantity: newStockAmount
+        },
+        {
+          item_id: answer.item_id
+        }
+      ],
+      function(error) {
+        if (error) throw error;
+        // printInventory();
+        purchaseItem();
+        console.log(
+          `
+          Your purchase costs $${itemPrice}
+          `
+        );
+      });
+    }
+  };
