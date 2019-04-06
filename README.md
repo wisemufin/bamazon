@@ -16,5 +16,5 @@
 
 #### Third it will update the table and show you the cost of your purchase
 
-  ![updated table](/images/new_table.PNG)
+  ![updated table](/images/new_tablemm.PNG)
   ![price shown](/images/showing_costs.PNG)
